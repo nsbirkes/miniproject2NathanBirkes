@@ -36,9 +36,39 @@ def get_fake_data(n: int) -> pd.DataFrame:
                 "name": f"{fake.first_name_male()} {fake.last_name()}", # First Last
                 "league": random.choice(leagues), #  NFL, NBA, or MLB
                 "salary": round(random.uniform(30, 120), 2), # Range = 30 - 120 mil
+                "age": round(random.uniform(20, 40), 2), # Range = 20 - 40 years old
             }
         )
 
     df = pd.DataFrame(rows)
-    
+
     return df
+
+
+def create_charts(df: pd.DataFrame) -> None:
+    """
+    todo - docstring
+
+    """
+
+
+    os.makedirs("charts", exist_ok=True)
+
+    # Scatter plot of ave vs salary
+    plt.figure(figsize=(10, 6))
+
+    for league in df["league"].unique():
+        subset = df[df["league"] == league]
+        plt.scatter(subset["age"], subset["salary"], label=league, alpha=0.7)
+
+    plt.title("Athlete Salary vs Age")
+    plt.xlabel("Age")
+    plt.ylabel("Salary (Millions USD)")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("charts/salary_vs_age_scatter.png", dpi=200)
+    plt.close()
+
+data = get_fake_data(33)
+
+create_charts(data)
